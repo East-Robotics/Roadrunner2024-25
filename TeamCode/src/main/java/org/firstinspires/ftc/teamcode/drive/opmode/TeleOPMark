@@ -94,7 +94,7 @@ public class TeleOpMark extends LinearOpMode {
                 Claw.setPosition(0.2);
 
             } else {
-                Claw.setPosition(0.6);
+                Claw.setPosition(0.40);
             }
 
 //Arm control
