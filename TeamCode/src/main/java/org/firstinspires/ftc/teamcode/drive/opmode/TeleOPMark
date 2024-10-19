@@ -28,6 +28,7 @@ public class TeleOpMark extends LinearOpMode {
 
     boolean lastXState = false;
     boolean currentXState = false;
+    
 
     public void runOpMode() {
         LFMotor = hardwareMap.get(DcMotor.class, "LFMotor");
@@ -98,16 +99,28 @@ public class TeleOpMark extends LinearOpMode {
             }
 
 //Arm control
-            if (gamepad1.right_bumper) {
+          if (gamepad2.right_bumper) {
                 Arm.setPower(-0.6);
             }
-            else if(gamepad1.left_bumper){
+            else if(gamepad2.left_bumper){
                 Arm.setPower(0.6);
             }
             else{
                 Arm.setPower(0);
             }
-
+//Slide control
+            if (gamepad1.right_bumper){
+                LSlide.setPower(-0.6);
+                RSlide.setPower(0.6);
+            }
+            if (gamepad1.left_bumper){
+                LSlide.setPower(0.6);
+                RSlide.setPower(-0.6);
+            }
+            else{
+                LSlide.setPower(0.07);
+                RSlide.setPower(-0.07); 
+            }
         }
     }
 }
