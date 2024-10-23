@@ -110,10 +110,10 @@ public class TeleOpMark extends LinearOpMode {
             }
 //Slide control
             if (gamepad1.right_bumper){
-                LSlide.setPower(-0.6);
-                RSlide.setPower(0.6);
+                LSlide.setPower(-0.7);
+                RSlide.setPower(0.7);
             }
-            if (gamepad1.left_bumper){
+            else if (gamepad1.left_bumper){
                 LSlide.setPower(0.6);
                 RSlide.setPower(-0.6);
             }
