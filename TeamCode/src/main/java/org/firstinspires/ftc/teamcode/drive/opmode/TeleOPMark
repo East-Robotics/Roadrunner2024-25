@@ -20,8 +20,9 @@ public class TeleOpMark extends LinearOpMode {
     private Servo Wrist;
     private Servo Claw;
 
-    boolean WristIsOpen = true;
-    boolean ClawIsOpen = true;
+
+    boolean WristIsOpen = false;
+    boolean ClawIsOpen = false;
 
     boolean lastYState = false;
     boolean currentYState = false;
@@ -44,7 +45,6 @@ public class TeleOpMark extends LinearOpMode {
 
         LBMotor.setDirection(DcMotor.Direction.REVERSE);
         LFMotor.setDirection(DcMotor.Direction.REVERSE);
-        Arm.setDirection(DcMotor.Direction.REVERSE);
 
         telemetry.addData("Status", "Running");
         telemetry.update();
@@ -52,8 +52,8 @@ public class TeleOpMark extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-            currentYState = gamepad1.y;
-            currentXState = gamepad1.x;
+            currentYState = gamepad2.y;
+            currentXState = gamepad2.x;
 
             double RFtgtPower = 0;
             double LFtgtPower = 0;
@@ -79,7 +79,7 @@ public class TeleOpMark extends LinearOpMode {
                 Wrist.setPosition(0.75);
             }
              else {
-                Wrist.setPosition(0.4);
+                Wrist.setPosition(1);
             }
 
 
@@ -100,13 +100,13 @@ public class TeleOpMark extends LinearOpMode {
 
 //Arm control
           if (gamepad2.right_bumper) {
-                Arm.setPower(-0.6);
-            }
-            else if(gamepad2.left_bumper){
                 Arm.setPower(0.6);
             }
+            else if(gamepad2.left_bumper){
+                Arm.setPower(-0.6);
+            }
             else{
-                Arm.setPower(0);
+                Arm.setPower(0.05);
             }
 //Slide control
             if (gamepad1.right_bumper){
