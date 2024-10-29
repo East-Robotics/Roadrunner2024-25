@@ -1,0 +1,158 @@
+package org.firstinspires.ftc.teamcode.drive.opmode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+@TeleOp
+public class TeleOpMark2 extends LinearOpMode {
+
+    private DcMotor LFMotor;
+    private DcMotor RFMotor;
+    private DcMotor LBMotor;
+    private DcMotor RBMotor;
+    private DcMotor LSlide;
+    private DcMotor RSlide;
+    private DcMotor Axel;
+
+    private Servo Wrist;
+    private Servo Claw;
+
+
+    boolean WristIsOpen = false;
+    boolean ClawIsOpen = false;
+
+    boolean lastYState = false;
+    boolean currentYState = false;
+
+    boolean lastXState = false;
+    boolean currentXState = false;
+    
+
+    public void runOpMode() {
+        LFMotor = hardwareMap.get(DcMotor.class, "LFMotor");
+        RFMotor = hardwareMap.get(DcMotor.class, "RFMotor");
+        LBMotor = hardwareMap.get(DcMotor.class, "LBMotor");
+        RBMotor = hardwareMap.get(DcMotor.class, "RBMotor");
+        LSlide = hardwareMap.get(DcMotor.class, "LSlide");
+        RSlide = hardwareMap.get(DcMotor.class, "RSlide");
+        Axel = hardwareMap.get(DcMotor.class, "Arm");
+
+        Wrist = hardwareMap.get(Servo.class, "Wrist");
+        Claw = hardwareMap.get(Servo.class, "Claw");
+        
+        LBMotor.setDirection(DcMotor.Direction.REVERSE);
+        LFMotor.setDirection(DcMotor.Direction.REVERSE);
+        
+        //Encoders
+        LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
+        RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        
+        LSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        
+        int slideUpPos = 1000; // changeable
+        int slideDownPos = 0;
+        
+        LSlide.setTargetPosition(slideDownPos);
+        RSlide.setTargetPosition(slideDownPos);
+        
+        LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+
+        telemetry.addData("Status", "Running");
+        telemetry.update();
+
+        waitForStart();
+        while (opModeIsActive()) {
+
+            currentYState = gamepad2.y;
+            currentXState = gamepad2.x;
+
+            double RFtgtPower = 0;
+            double LFtgtPower = 0;
+            double RBtgtPower = 0;
+            double LBtgtPower = 0;
+            double py = -gamepad1.left_stick_y;
+            double px = -gamepad1.left_stick_x;
+            double pa = gamepad1.right_stick_x;
+
+            LFMotor.setPower((py - px + pa) / 1.5);
+            RFMotor.setPower((py + px - pa) / 1.5);
+            LBMotor.setPower((py + px + pa) / 1.5);
+            RBMotor.setPower((py - px - pa) / 1.5);
+
+//Wrist toggle
+            if (currentYState && !lastYState) {
+                WristIsOpen = !WristIsOpen;
+            }
+
+            lastYState = currentYState;
+
+            if (WristIsOpen) {
+                Wrist.setPosition(0.75);
+            }
+             else {
+                Wrist.setPosition(1);
+            }
+
+
+
+//Claw toggle
+            if (currentXState && !lastXState) {
+                ClawIsOpen = !ClawIsOpen;
+            }
+
+            lastXState = currentXState;
+
+            if (ClawIsOpen) {
+                Claw.setPosition(0.2);
+
+            } else {
+                Claw.setPosition(0.40);
+            }
+
+//Arm control
+          if (gamepad2.right_bumper) {
+                Axel.setPower(0.6);
+            }
+            else if(gamepad2.left_bumper){
+                Axel.setPower(-0.6);
+            }
+            else{
+                Axel.setPower(0.05);
+            }
+//Slide control
+            if (gamepad1.right_bumper){ //slide down
+                LSlide.setPower(-0.7);
+                RSlide.setPower(0.7);   
+                
+                LSlide.setTargetPosition(slideDownPos);
+                RSlide.setTargetPosition(slideDownPos);
+                
+                LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                
+            }
+            else if (gamepad1.left_bumper){ //slide Up
+                LSlide.setPower(0.6);
+                RSlide.setPower(-0.6);  
+                
+                LSlide.setTargetPosition(slideUpPos);
+                RSlide.setTargetPosition(slideUpPos);
+                
+                LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+            else{ //slide stay
+                LSlide.setPower(0.07);
+                RSlide.setPower(-0.07); 
+            }
+        }
+    }
+}
