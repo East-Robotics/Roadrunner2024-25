@@ -19,6 +19,9 @@ public class TeleOpMark2 extends LinearOpMode {
 
     private Servo Wrist;
     private Servo Claw;
+    
+    double g2RT;
+    double g2LT;
 
 
     boolean WristIsOpen = false;
@@ -51,7 +54,7 @@ public class TeleOpMark2 extends LinearOpMode {
         LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
         RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        
+        //Slide encoders
         LSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         
@@ -63,13 +66,25 @@ public class TeleOpMark2 extends LinearOpMode {
         
         LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//Axel Encoders
+        Axel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int AxelUpPos = 1000; // changeable
+        int AxelMidPos = 500;
+        int AxelDownPos = 0;
         
+        Axel.setTargetPosition(AxelMidPos);
+        
+        Axel.setPower(0.5);
+        
+        Axel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Status", "Running");
         telemetry.update();
 
         waitForStart();
         while (opModeIsActive()) {
+            g2RT = gamepad2.right_trigger;
+            g2LT = gamepad2.left_trigger;
 
             currentYState = gamepad2.y;
             currentXState = gamepad2.x;
@@ -118,17 +133,22 @@ public class TeleOpMark2 extends LinearOpMode {
             }
 
 //Arm control
-          if (gamepad2.right_bumper) {
-                Axel.setPower(0.6);
+          if (g2RT > 0.2) {
+            Axel.setTargetPosition(AxelUpPos);
+            Axel.setPower(0.6);
+            Axel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             }
-            else if(gamepad2.left_bumper){
-                Axel.setPower(-0.6);
+            else if(g2LT > 0.2){
+            Axel.setTargetPosition(AxelDownPos);
+            Axel.setPower(-0.6);
+            Axel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
             else{
-                Axel.setPower(0.05);
+                Axel.setPower(0.1);
             }
 //Slide control
-            if (gamepad1.right_bumper){ //slide down
+            if (gamepad2.right_bumper){ //slide down
                 LSlide.setPower(-0.7);
                 RSlide.setPower(0.7);   
                 
@@ -139,7 +159,7 @@ public class TeleOpMark2 extends LinearOpMode {
                 RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 
             }
-            else if (gamepad1.left_bumper){ //slide Up
+            else if (gamepad2.left_bumper){ //slide Up
                 LSlide.setPower(0.6);
                 RSlide.setPower(-0.6);  
                 
