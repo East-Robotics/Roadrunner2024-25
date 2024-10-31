@@ -71,7 +71,10 @@ public void runOpMode(){
         //Axel encoders
         Axel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         
-        int axelPos = 
+        int axelPos = 0;
+        
+        Axel.setTargetPosition(axelPos);
+        
         
         wristDown = true;
         clawOpen  = false;
@@ -98,6 +101,11 @@ public void runOpMode(){
                 LBMotor.setPower(0);
                 RFMotor.setPower(0);
                 RBMotor.setPower(0);
+                
+                LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
+                RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //Slide Up                
         LSlide.setTargetPosition(slideUpPos);
         RSlide.setTargetPosition(slideUpPos);
@@ -110,8 +118,78 @@ public void runOpMode(){
         
         LSlide.setPower(0.07);
         RSlide.setPower(-0.07);
+//Arm Down
+        Axel.setTargetPosition(425);
         
+        Axel.setPower(0.4);
         
+        Axel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//Claw release
+        Claw.setPosition(0.4);
+//Arm Back
+        Axel.setTargetPosition(500);
+        
+        Axel.setPower(-0.4);
+        
+        Axel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+//Slide Down
+        LSlide.setTargetPosition(slideDownPos);
+        RSlide.setTargetPosition(slideDownPos);
+        
+        LSlide.setPower(-0.6);
+        RSlide.setPower(0.6);
+        
+        LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+        LSlide.setPower(0);
+        RSlide.setPower(0);
+        
+//Strafe Right
+        TDrivePos = 500;
+        
+        LFMotor.setTargetPosition(TDrivePos);
+        RFMotor.setTargetPosition(-TDrivePos);
+        LBMotor.setTargetPosition(-TDrivePos);
+        RBMotor.setTargetPosition(TDrivePos);
+        
+        LFMotor.setPower(0.4);
+        LBMotor.setPower(-0.4);
+        RFMotor.setPower(0.4);
+        RBMotor.setPower(-0.4);
+        
+        LFMotor.setPower(0);
+        LBMotor.setPower(0);
+        RFMotor.setPower(0);
+        RBMotor.setPower(0);
+        
+        LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
+        RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//Park
+        TDrivePos = 500;
+        
+        LFMotor.setTargetPosition(-TDrivePos);
+        RFMotor.setTargetPosition(-TDrivePos);
+        LBMotor.setTargetPosition(-TDrivePos);
+        RBMotor.setTargetPosition(-TDrivePos);
+        
+        LFMotor.setPower(-0.4);
+        LBMotor.setPower(-0.4);
+        RFMotor.setPower(-0.4);
+        RBMotor.setPower(-0.4);
+        
+        LFMotor.setPower(0);
+        LBMotor.setPower(0);
+        RFMotor.setPower(0);
+        RBMotor.setPower(0);
+        
+        LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
+        RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             
 }
