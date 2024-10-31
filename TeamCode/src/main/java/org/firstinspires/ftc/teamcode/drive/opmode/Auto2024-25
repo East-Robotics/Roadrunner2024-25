@@ -1,0 +1,119 @@
+package org.firstinspires.ftc.teamcode;
+
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+@Autonomous
+
+public class Auto_2024_25 extends LinearOpMode {
+       private DcMotor LFMotor;
+       private DcMotor RFMotor;
+       private DcMotor LBMotor;
+       private DcMotor RBMotor;
+       private DcMotor LSlide;
+       private DcMotor RSlide;
+        private DcMotor Axel;
+       private Servo Wrist;
+       private Servo Claw;
+       
+       boolean wristDown;
+       boolean clawOpen;
+       private ElapsedTime     runtime = new ElapsedTime();
+       
+public void runOpMode(){
+        LFMotor = hardwareMap.get(DcMotor.class, "LFMotor");
+        RFMotor = hardwareMap.get(DcMotor.class, "RFMotor");
+        LBMotor = hardwareMap.get(DcMotor.class, "LBMotor");
+        RBMotor = hardwareMap.get(DcMotor.class, "RBMotor");
+        LSlide = hardwareMap.get(DcMotor.class, "LSlide");
+        RSlide = hardwareMap.get(DcMotor.class, "RSlide");
+
+        Axel = hardwareMap.get(DcMotor.class, "Arm");
+
+        Wrist = hardwareMap.get(Servo.class, "Wrist");
+        Claw = hardwareMap.get(Servo.class, "Claw");
+    
+        
+        LBMotor.setDirection(DcMotor.Direction.REVERSE);
+        LFMotor.setDirection(DcMotor.Direction.REVERSE);
+        
+        LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
+        RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //Slide encoders
+        LSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        
+        int slideUpPos = 1000; // changeable
+        int slideDownPos = 0;
+        
+        LSlide.setTargetPosition(slideDownPos);
+        RSlide.setTargetPosition(slideDownPos);
+        
+        LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+        //Drive encoders
+        int TDrivePos = 500;
+        
+        LFMotor.setTargetPosition(TDrivePos);
+        RFMotor.setTargetPosition(TDrivePos);
+        LBMotor.setTargetPosition(TDrivePos);
+        RBMotor.setTargetPosition(TDrivePos);
+        
+        //Axel encoders
+        Axel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        
+        int axelPos = 
+        
+        wristDown = true;
+        clawOpen  = false;
+        
+        telemetry.addData("Status", "Running");
+        telemetry.update();
+        
+        waitForStart();
+        runtime.reset();
+        
+    while(opModeIsActive()) {
+//Forward
+                LFMotor.setPower(0.4);
+                LBMotor.setPower(0.4);
+                RFMotor.setPower(0.4);
+                RBMotor.setPower(0.4);
+                
+                LFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION); 
+                RFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                
+                LFMotor.setPower(0);
+                LBMotor.setPower(0);
+                RFMotor.setPower(0);
+                RBMotor.setPower(0);
+//Slide Up                
+        LSlide.setTargetPosition(slideUpPos);
+        RSlide.setTargetPosition(slideUpPos);
+        
+        LSlide.setPower(0.6);
+        RSlide.setPower(-0.6);
+        
+        LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        
+        LSlide.setPower(0.07);
+        RSlide.setPower(-0.07);
+        
+        
+
+            
+}
+} 
+}
