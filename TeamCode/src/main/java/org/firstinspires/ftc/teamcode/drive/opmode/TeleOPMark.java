@@ -15,8 +15,8 @@ public class TeleOpMark extends LinearOpMode {
     private DcMotor RBMotor;
     private DcMotor LSlide;
     private DcMotor RSlide;
-    private DcMotor Arm;
-
+    private DcMotor LArm;
+    private DcMotor RArm;
     private Servo Wrist;
     private Servo Claw;
 
@@ -38,13 +38,22 @@ public class TeleOpMark extends LinearOpMode {
         RBMotor = hardwareMap.get(DcMotor.class, "RBMotor");
         LSlide = hardwareMap.get(DcMotor.class, "LSlide");
         RSlide = hardwareMap.get(DcMotor.class, "RSlide");
-        Arm = hardwareMap.get(DcMotor.class, "Arm");
+        LArm = hardwareMap.get(DcMotor.class, "LArm");
+        RArm = hardwareMap.get(DcMotor.class, "RArm");
 
         Wrist = hardwareMap.get(Servo.class, "Wrist");
         Claw = hardwareMap.get(Servo.class, "Claw");
+        
+        //Encoders
+        LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
+        RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         LBMotor.setDirection(DcMotor.Direction.REVERSE);
         LFMotor.setDirection(DcMotor.Direction.REVERSE);
+        
+        LArm.setDirection(DcMotor.Direction.REVERSE);        
 
         telemetry.addData("Status", "Running");
         telemetry.update();
@@ -100,13 +109,16 @@ public class TeleOpMark extends LinearOpMode {
 
 //Arm control
           if (gamepad2.right_bumper) {
-                Arm.setPower(0.6);
+                LArm.setPower(0.6);
+                RArm.setPower(0.6);
             }
             else if(gamepad2.left_bumper){
-                Arm.setPower(-0.6);
+                LArm.setPower(-0.6);
+                RArm.setPower(-0.6);
             }
             else{
-                Arm.setPower(0.05);
+                LArm.setPower(0.05);
+                RArm.setPower(0.05);
             }
 //Slide control
             if (gamepad1.right_bumper){
