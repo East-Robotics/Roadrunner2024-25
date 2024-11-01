@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @TeleOp
-public class TeleOpMark extends LinearOpMode {
+public class TeleOpMark2 extends LinearOpMode {
 
     private DcMotor LFMotor;
     private DcMotor RFMotor;
@@ -15,10 +15,14 @@ public class TeleOpMark extends LinearOpMode {
     private DcMotor RBMotor;
     private DcMotor LSlide;
     private DcMotor RSlide;
-    private DcMotor LArm;
-    private DcMotor RArm;
+    private DcMotor LAxel;
+    private DcMotor RAxel;
+
     private Servo Wrist;
     private Servo Claw;
+    
+    double g2RT;
+    double g2LT;
 
 
     boolean WristIsOpen = false;
@@ -38,28 +42,57 @@ public class TeleOpMark extends LinearOpMode {
         RBMotor = hardwareMap.get(DcMotor.class, "RBMotor");
         LSlide = hardwareMap.get(DcMotor.class, "LSlide");
         RSlide = hardwareMap.get(DcMotor.class, "RSlide");
-        LArm = hardwareMap.get(DcMotor.class, "LArm");
-        RArm = hardwareMap.get(DcMotor.class, "RArm");
+        LAxel = hardwareMap.get(DcMotor.class, "LArm");
+        RAxel = hardwareMap.get(DcMotor.class, "RArm");
 
         Wrist = hardwareMap.get(Servo.class, "Wrist");
         Claw = hardwareMap.get(Servo.class, "Claw");
+        
+        LBMotor.setDirection(DcMotor.Direction.REVERSE);
+        LFMotor.setDirection(DcMotor.Direction.REVERSE);
+        
+        LAxel.setDirection(DcMotor.Direction.REVERSE);
         
         //Encoders
         LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
         RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        LBMotor.setDirection(DcMotor.Direction.REVERSE);
-        LFMotor.setDirection(DcMotor.Direction.REVERSE);
+        //Slide encoders
+        LSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         
-        LArm.setDirection(DcMotor.Direction.REVERSE);        
+        int slideUpPos = 1000; // changeable
+        int slideDownPos = 0;
+        
+        LSlide.setTargetPosition(slideDownPos);
+        RSlide.setTargetPosition(slideDownPos);
+        
+        LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//Axel Encoders
+        LAxel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LAxel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        int AxelUpPos = 1000; // changeable
+        int AxelMidPos = 200;
+        int AxelDownPos = 0;
+        
+        LAxel.setTargetPosition(AxelMidPos);
+        RAxel.setTargetPosition(AxelMidPos);
+        
+        LAxel.setPower(0.5);
+        RAxel.setPower(0.5);
+        
+        LAxel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RAxel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         telemetry.addData("Status", "Running");
         telemetry.update();
 
         waitForStart();
         while (opModeIsActive()) {
+            g2RT = gamepad2.right_trigger;
+            g2LT = gamepad2.left_trigger;
 
             currentYState = gamepad2.y;
             currentXState = gamepad2.x;
@@ -108,28 +141,55 @@ public class TeleOpMark extends LinearOpMode {
             }
 
 //Arm control
-          if (gamepad2.right_bumper) {
-                LArm.setPower(0.6);
-                RArm.setPower(0.6);
+          if (g2RT > 0.2) {
+            LAxel.setTargetPosition(AxelUpPos);
+            RAxel.setTargetPosition(AxelUpPos);
+            LAxel.setPower(0.6);
+            RAxel.setPower(0.6);
+            LAxel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RAxel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
             }
-            else if(gamepad2.left_bumper){
-                LArm.setPower(-0.6);
-                RArm.setPower(-0.6);
+            else if(g2LT > 0.2){
+            LAxel.setTargetPosition(AxelDownPos);
+            RAxel.setTargetPosition(AxelDownPos);
+            LAxel.setPower(-0.6);
+            RAxel.setPower(-0.6);
+            LAxel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            RAxel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
             else{
-                LArm.setPower(0.05);
-                RArm.setPower(0.05);
+                LAxel.setPower(0.07);
+                RAxel.setPower(0.07);
+            }
+//Arm dist check
+            int position = LAxel.getCurrentPosition();
+            if (position < 200){
+                slideUpPos = 500;
             }
 //Slide control
-            if (gamepad1.right_bumper){
+            if (gamepad2.right_bumper){ //slide down
                 LSlide.setPower(-0.7);
-                RSlide.setPower(0.7);
+                RSlide.setPower(0.7);   
+                
+                LSlide.setTargetPosition(slideDownPos);
+                RSlide.setTargetPosition(slideDownPos);
+                
+                LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                
             }
-            else if (gamepad1.left_bumper){
+            else if (gamepad2.left_bumper){ //slide Up
                 LSlide.setPower(0.6);
-                RSlide.setPower(-0.6);
+                RSlide.setPower(-0.6);  
+                
+                LSlide.setTargetPosition(slideUpPos);
+                RSlide.setTargetPosition(slideUpPos);
+                
+                LSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                RSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             }
-            else{
+            else{ //slide stay
                 LSlide.setPower(0.07);
                 RSlide.setPower(-0.07); 
             }
