@@ -20,7 +20,7 @@ public class TeleOpMark extends LinearOpMode {
     private Servo Claw;
 
 
-    boolean WristIsOpen = false;
+    boolean WristIsOpen = true;
     boolean ClawIsOpen = false;
 
     boolean lastYState = false;
@@ -43,10 +43,10 @@ public class TeleOpMark extends LinearOpMode {
         Claw = hardwareMap.get(Servo.class, "Claw");
         
         //Encoders
-        LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       /* LFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); 
         RFMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RBMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);*/
 
         LBMotor.setDirection(DcMotor.Direction.REVERSE);
         LFMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -70,10 +70,10 @@ public class TeleOpMark extends LinearOpMode {
             double px = -gamepad1.left_stick_x;
             double pa = gamepad1.right_stick_x;
 
-            LFMotor.setPower((py - px + pa) / 1.5);
-            RFMotor.setPower((py + px - pa) / 1.5);
-            LBMotor.setPower((py + px + pa) / 1.5);
-            RBMotor.setPower((py - px - pa) / 1.5);
+            LFMotor.setPower(py - px + pa);
+            LBMotor.setPower(-py - px - pa);
+            RFMotor.setPower(py + px + pa);
+            RBMotor.setPower(py + px - pa);
 
 //Wrist toggle
             if (currentYState && !lastYState) {
@@ -83,7 +83,7 @@ public class TeleOpMark extends LinearOpMode {
             lastYState = currentYState;
 
             if (WristIsOpen) {
-                Wrist.setPosition(0.75);
+                Wrist.setPosition(0.4);
             }
              else {
                 Wrist.setPosition(1);
@@ -113,19 +113,19 @@ public class TeleOpMark extends LinearOpMode {
                 Arm.setPower(-0.6);
             }
             else{
-                Arm.setPower(0.05);
+                Arm.setPower(-0.07);
             }
 //Slide control
-            if (gamepad1.right_bumper){
-                LSlide.setPower(-0.7);
+            if (gamepad1.right_bumper){//down
+                LSlide.setPower(0.7);
                 RSlide.setPower(0.7);
             }
-            else if (gamepad1.left_bumper){
-                LSlide.setPower(0.6);
+            else if (gamepad1.left_bumper){//up
+                LSlide.setPower(-0.6);
                 RSlide.setPower(-0.6);
             }
             else{
-                LSlide.setPower(0.07);
+                LSlide.setPower(-0.07);
                 RSlide.setPower(-0.07); 
             }
         }
