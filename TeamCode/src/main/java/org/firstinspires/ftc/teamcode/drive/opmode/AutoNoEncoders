@@ -1,0 +1,55 @@
+package org.firstinspires.ftc.teamcode;
+
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+
+@Autonomous
+
+public class AutoNoEncoders extends LinearOpMode {
+       private DcMotor LFMotor;
+       private DcMotor RFMotor;
+       private DcMotor LBMotor;
+       private DcMotor RBMotor;
+       private DcMotor LSlide;
+       private DcMotor RSlide;
+        private DcMotor Axel;
+       private Servo Wrist;
+       private Servo Claw;
+       
+       boolean wristDown;
+       boolean clawOpen;
+       private ElapsedTime     runtime = new ElapsedTime();
+       
+public void runOpMode(){
+        LFMotor = hardwareMap.get(DcMotor.class, "LFMotor");
+        RFMotor = hardwareMap.get(DcMotor.class, "RFMotor");
+        LBMotor = hardwareMap.get(DcMotor.class, "LBMotor");
+        RBMotor = hardwareMap.get(DcMotor.class, "RBMotor");
+        LSlide = hardwareMap.get(DcMotor.class, "LSlide");
+        RSlide = hardwareMap.get(DcMotor.class, "RSlide");
+
+        Axel = hardwareMap.get(DcMotor.class, "Arm");
+
+        Wrist = hardwareMap.get(Servo.class, "Wrist");
+        Claw = hardwareMap.get(Servo.class, "Claw");
+    
+        
+        LBMotor.setDirection(DcMotor.Direction.REVERSE);
+        LFMotor.setDirection(DcMotor.Direction.REVERSE);
+
+
+  while(opModeIsActive()) {
+//Forward
+while (runtime.seconds()<2){
+                LFMotor.setPower(0.4);
+                LBMotor.setPower(0.4);
+                RFMotor.setPower(0.4);
+                RBMotor.setPower(0.4);
+}}}}
